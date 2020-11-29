@@ -167,8 +167,7 @@ and can be expressed as
 \end{align}
 where
 \begin{align}
-	\vec{V} &= \vec{V}^T = \myvec{a & b \\ b & c}
-	\\
+	\vec{V} &= \vec{V}^T = \myvec{a & b \\ b & c}	\\
 	\vec{u}^T &= \myvec{d & e}
 \end{align}
 
@@ -224,9 +223,9 @@ The focal length of the parabola is given by
 \end{align}
 \begin{align}
 		\myvec{\vec{u^T}+\eta\vec{p_1^T} \\ \vec{V}}\vec{c}=
-		\myvec{-f \\ \eta\vec{p_1}-\vec{u}} \label{eq:8}
+		\myvec{-f \\ \eta\vec{p_1}-\vec{u}} \label{eq:9}
 \end{align}
-using equations \eqref{eq:2},\eqref{eq:3} and \eqref{eq:8}
+using equations \eqref{eq:2},\eqref{eq:3} and \eqref{eq:7}
 \begin{align}
 	\myvec{307& -142 \\ 144 & -60 \\  -60 & 25 }\vec{c}=\myvec{-663 \\ -312\\ 130} 
 \end{align}
@@ -248,8 +247,94 @@ Forming the augmented matrix and row reducing it:
 \end{align}
 Thus the vertex $\vec{c}$ is:
 \begin{align}
-	\vec{c}=\myvec{ -2.23\\-0.153} 
+	\vec{c}=\myvec{ -2.23\\-0.153} \label{eq:center}
 \end{align}
+
+
+
+%QR DECOMPOSITION
+The QR decomposition of
+$\vec{V}$ can be written as,
+\begin{align}
+	\vec{V} = \myvec{\vec{a} & \vec{b}} \label{eq:10}
+\end{align}
+where $\vec{a}$ and $\vec{b}$ and  are column vectors,
+\begin{align}
+	\vec{a} = \myvec{144 \\ -60} \label{eq:11}
+\end{align}
+\begin{align}
+	\vec{b} = \myvec{-60 \\25} \label{eq:12}
+\end{align}
+\begin{align}
+	\vec{V} = \vec{QR}\label{eq:13}
+\end{align}
+where $\vec{R}$ is a upper triangular matrix and $\vec{Q}$ such that, 
+\begin{align}
+	\vec{Q^TQ} = \vec{I}\label{eq:14}
+\end{align}
+and 
+\begin{align}
+	\vec{Q} = \myvec{\vec{q_1} & \vec{q_2}} \ and \ \vec{R} = \myvec{r_1 & r_2 \\ 0 & r_3}  \label{eq:15}  
+\end{align}
+$\vec{q_1}$, $\vec{q_2}$ and the values in $\vec{R}$ are given by,
+\begin{align}
+	r_1 = \norm{\vec{a}}\\\label{eq:16}
+	\vec{q_1} = \frac{\vec{a}}{r_1}\\\label{eq:17}
+	r_2 = \frac{\vec{q_1^Tb}}{\norm{\vec{q_1}}^{2}}\\
+	\vec{q_2} = \frac{\vec{b} - r_2\vec{q_1}}{\norm{\vec{b}-r_2\vec{q_1}}}\\
+	r_3 = \vec{q_2^Tb}
+\end{align}
+Hence,
+\begin{align}
+	r_1 = \sqrt{24336}=156\\
+	\vec{q_1} = \frac{1}{156}\myvec{144 \\ -60} = \myvec{\frac{12}{13} \\[1em] \frac{-5}{13}}\\
+	r_2 = -65\\
+	\vec{q_2} = \sqrt{5}\myvec{\frac{1}{5} \\[1em] \frac{2}{5}} = \myvec{0 \\0}\\
+	r_3 = 0
+\end{align}
+Therefore,
+\begin{align}
+	\vec{QR} = \myvec{\frac{12}{13} & 0 \\ \frac{-5}{13} & 0}\myvec{156 & -65 \\ 0 & 0}\\
+	\implies \vec{QR} = \myvec{144 & -60 \\ -60 & 25} \label{eq:19}
+\end{align}
+As \eqref{eq:2} and \eqref{eq:19} are equal, the QR decomposition holds.
+
+Verifying the solution using least square method  
+%Verification using least square method
+\begin{align}
+	\myvec{307& -142 \\ 144 & -60 \\  -60 & 25 }\vec{c}=\myvec{-663 \\ -312\\ 130} 
+\end{align}
+This is in the form of 
+\begin{align}
+ {A}\vec{c}=\vec{b}
+ \end{align}
+  \begin{align} 
+ \intertext{using least squares solution of linear system}
+ {A}^T{A}\vec{c}={A}^T\vec{b}
+ \implies \vec{c}=  ({{A}^T{A}})^{-1} {A}^T\vec{b} \label{eq:20}
+\end{align}
+\begin{align}
+{A}^T{A}=\myvec{307 & 144 & --60 \\ -142& -60& 25 }
+ \myvec{307& -142 \\ 144 & -60 \\  -60 & 25 } \nonumber \\ \implies
+ {A}^T{A}=\myvec{118585& -53734 \\  -53734 & 24389 }
+\end{align}
+The inverse can be written as
+\begin{align}
+    ({{A}^T{A}})^{-1}=\frac{1}{4826809}
+    \myvec{24389&53734 \\  53734 & 118585}\label{eq:21}
+\end{align} 
+\begin{align}
+   {A}^T\vec{b} = \myvec{307 & 144 & --60 \\ -142& -60& 25 }\myvec{-663 \\ -312 \\ 130} \nonumber \\
+   {A}^T\vec{b} =\myvec{-256269 \\ 116116} \label{eq:22}
+\end{align}
+using \ref{eq:21} and \ref{eq:22} in \ref{eq:20},the center $\vec{c}$
+\begin{align}
+    \vec{c}=\frac{1}{4826809}
+    \myvec{24389&53734 \\  53734 & 118585}\myvec{-256269 \\ 116116} \\
+    \implies \vec{c}=\frac{1}{4826809}\myvec{-10767497 \\ -742586}\\
+    \implies \vec{c}=\myvec{-2.23 \\ -0.153}  
+\end{align}
+\clearpage
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width =\columnwidth]{parabola.png}
