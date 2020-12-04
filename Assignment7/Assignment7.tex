@@ -217,41 +217,7 @@ where
 \begin{align}
 		\eta=\vec{u}^T\vec{p_1}=-6.5
 \end{align}
-The focal length of the parabola is given by 
-\begin{align}
-	\frac{\abs{2\vec{u}^T\vec{p_1}}}{\lambda_2}	= \frac{1}{13}
-\end{align}
-\begin{align}
-		\myvec{\vec{u^T}+\eta\vec{p_1^T} \\ \vec{V}}\vec{c}=
-		\myvec{-f \\ \eta\vec{p_1}-\vec{u}} \label{eq:9}
-\end{align}
-using equations \eqref{eq:2},\eqref{eq:3} and \eqref{eq:7}
-\begin{align}
-	\myvec{307& -142 \\ 144 & -60 \\  -60 & 25 }\vec{c}=\myvec{-663 \\ -312\\ 130} 
-\end{align}
-Forming the augmented matrix and row reducing it:
-\begin{align}
-		\myvec{307 & -142 & -663\\144 & -60 & -312 \\-60 & 25 &130 }\\
-		\xleftrightarrow[]{R_3\leftarrow R_3+(5/12)R_2} 
-		\myvec{307 & -142 & -663\\144 & -60 & -312 \\0 & 0 &0 }\\
-		\xleftrightarrow[]{R_2\leftarrow R_2/12} 
-		\myvec{307 & -142 & -663\\12 & -5 & -26 \\0 & 0 &0 }\\
-		\xleftrightarrow[]{R_1\leftarrow R_1/(307)} 
-		\myvec{1 & -142/307 & -663/307\\12 & -5 & -26 \\0 & 0 &0 }\\
-		\xleftrightarrow[]{R_2\leftarrow R_2-12R_1}
-		\myvec{1 & -142/307 & -663/307\\0 & 169/307 & -26/307 \\0 & 0 &0}\\ 
-		\xleftrightarrow[]{R_2\leftarrow R_2 (307/169)}
-		\myvec{1 & -142/307 & -663/307\\0 & 1 & -2/13 \\0 & 0 &0}\\
-		\xleftrightarrow[]{R_1\leftarrow R_1 +(142/307)R_2}
-		\myvec{1 & 0 & -8903/3991\\0 & 1 & -2/13 \\0 & 0 &0}
-\end{align}
-Thus the vertex $\vec{c}$ is:
-\begin{align}
-	\vec{c}=\myvec{ -2.23\\-0.153} \label{eq:center}
-\end{align}
-
-
-
+\subsection{Finding QR decompostion of V}
 %QR DECOMPOSITION
 The QR decomposition of
 $\vec{V}$ can be written as,
@@ -299,46 +265,125 @@ Therefore,
 \end{align}
 As \eqref{eq:2} and \eqref{eq:19} are equal, the QR decomposition holds.
 
-Verifying the solution using least square method  
+\subsection{Finding vertex using SVD}
+The equation of perpendicular line passing through focus and intersecting parabola at vertex $\vec c$ is given as
+\begin{align}
+	\myvec{\vec{u^T}+\frac{\eta}{2}\vec{p_1^T} \\ \vec{V}}\vec{c}=\myvec{-f \\ \frac{\eta}{2}\vec{p_1}-\vec{u}} 
+\end{align}
+\begin{align}
+	&\myvec{\frac{1233}{4} & -139\\144 & -60\\-60 & 25}\vec c = \myvec{-663\\\frac{1243}{4}\\133}\\
+	&\implies \vec M \vec c= \vec b\label{eq: Mc=b}
+\end{align}
+To solve \eqref{eq: Mc=b}, we perform Singular Value Decomposition on $\vec{M}$ given as 
+\begin{align}
+	\vec{M = USV^T }\label{eq: SVD}
+\end{align}
+Putting this value of $\vec{M}$ in \eqref{eq: Mc=b}, we get
+\begin{align}
+	&\vec{USV^T}\vec{c} = \vec{b} \\
+	\implies& \vec{c} = \vec{VS_+U^T}\vec{b}\label{eq: c}
+\end{align}
+where, $\vec{S_+}$ is Moore-Penrose pseudo-inverse of $\vec{S}$. Columns of $\vec{U}$ are eigen-vectors of $\vec{MM^T}$, columns of $\vec{V}$ are eigen-vectors of $\vec{M^TM}$ and $\vec{S}$ is diagonal matrix of singular value of eigenvalues of $\vec{M^TM}$.
+\begin{align}
+	\vec {MM^T} &= \myvec{308 & -139\\144 & -60\\ -60 & 25} \myvec {308 & 144 & -60\\ -139 & -60 & 25}\\[1em]
+	& = \myvec{114340 & 52728 & -21970\\ 52728 & 24336 & -10140\\-21970 & -10140 & 4225}\\[1em]
+	\vec{M^TM}=& \myvec {308 & 144 & -60\\ -139 & -60 & 25} \myvec{308 & -139\\144 & -60\\ -60 & 25}\\[1em]
+	&= \myvec{119354 & -52986\\ -52986 & 23546}
+\end{align}
+Eigen values of $\vec{M^TM}$ can be found out as
+\begin{align}
+	&\abs{\vec{M^TM-\lambda I}} = 0\\[1em]
+	\implies & \mydet{119354- \lambda & -52986\\ -52986 & 23546 -\lambda}=0
+\end{align}	
+Solving this we get the eigen values of $\vec{M^TM}$ as, 
+\begin{align}
+	\lambda_1 = 19\\
+	\lambda_2=  142880
+\end{align}
+The corresponding normalized eigen vectors are:
+\begin{align}
+	\vec v_1 = \myvec{-0.9140\\ 0.4058}\\
+	\vec v_2 = \myvec{-0.4058\\ -0.9140}
+\end{align}
+Hence, 
+\begin{align}
+	\vec V=& \myvec{\vec v_1 & \vec v_2}
+	=\myvec{-0.9140 & -0.4058\\0.4058& -0.9140}
+\end{align}
+Eigen values of $\vec{MM^T}$ can be found by solving:
+\begin{align}
+	&\abs{\vec{MM^T}-\lambda \vec {I}} = 0\\
+	\implies & \mydet{114340- \lambda & 52728 & -21970\\ 52728 & 24336- \lambda & -10140\\ -21970 & -10140 & 4225-\lambda}=0
+\end{align}
+Solving this, we get the eigen values of $\vec{MM^T}$ as:
+\begin{align}
+	\lambda_3= 19\\
+	\lambda_4= 142880\\
+	\lambda_5= 0
+\end{align}
+The corresponding eigen vectors after normalizing are:
+\begin{align}
+	\vec u_1 = \myvec{-0.8945\\-0.4126\\0.1719}\\
+	\vec u_2= \myvec{0.4470\\-0.8257\\0.3441}\\
+	\vec u_3= \myvec{0 \\0.3846\\ 0.9231}\\
+	\therefore \vec U= \myvec{-0.8945& 0.4470 & 0\\
+		-0.4126 & -0.8257 & 0.3846\\
+		0.1719 & 0.3441 & 0.9231}
+\end{align}
+After computing the singular values from the eigen values, \begin{align}
+	\vec S &= \myvec{\sqrt{\lambda _1} & 0\\ 0 & \sqrt{\lambda_2}\\ 0 & 0}
+	= \myvec {378 & 0 \\ 0 & 4.35 \\0 & 0}
+\end{align}
+Therefore we get the SVD of $\vec M $ as:
+\begin{align}
+	\vec M = \myvec{-0.8945& 0.4470 & 0\\
+		-0.4126 & -0.8257 & 0.3846\\
+		0.1719 & 0.3441 & 0.9231} \myvec {378 & 0 \\ 0 & 4.35 \\0 & 0}\\ \myvec{-0.9140 & -0.4058\\0.4058& -0.9140}^T
+\end{align}
+\begin{align}
+	= \myvec{308 & -139\\144 & -60\\ -60 & 25} 
+\end{align}
+Moore- penrose pseudo inverse of $\vec S $ is:
+\begin{align}
+	\vec S_+ = \myvec{0.0026 &0 &0\\ 0 & 0.2294 & 0}
+\end{align}
+Putting the values in \eqref{eq: c},
+\begin{align}
+	\vec {U^Tb}= \myvec{744.132\\  5.99\\3.25}\\
+	\vec {S_+ U^T b}= \myvec{1.964\\  1.3736}\\
+	\vec {c}= \vec{S_+ U^T b}= \myvec{-2.35\\-0.458}\label{eq: svd sol c}
+\end{align}
+
+\subsection{Verification using least square method}
 %Verification using least square method
 \begin{align}
-	\myvec{307& -142 \\ 144 & -60 \\  -60 & 25 }\vec{c}=\myvec{-663 \\ -312\\ 130} 
+	\myvec{308 & -139\\144 & -60\\ -60 & 25}\vec{c}=\myvec{-663\\\frac{1243}{4}\\133}
 \end{align}
 This is in the form of 
 \begin{align}
  {A}\vec{c}=\vec{b}
  \end{align}
   \begin{align} 
- \intertext{using least squares solution of linear system}
  {A}^T{A}\vec{c}={A}^T\vec{b}
  \implies \vec{c}=  ({{A}^T{A}})^{-1} {A}^T\vec{b} \label{eq:20}
 \end{align}
 \begin{align}
-{A}^T{A}=\myvec{307 & 144 & --60 \\ -142& -60& 25 }
- \myvec{307& -142 \\ 144 & -60 \\  -60 & 25 } \nonumber \\ \implies
- {A}^T{A}=\myvec{118585& -53734 \\  -53734 & 24389 }
+{A}^T{A}=& \myvec {308 & 144 & -60\\ -139 & -60 & 25} \myvec{308 & -139\\144 & -60\\ -60 & 25}\\[1em]
+&= \myvec{119354 & -52986.8\\ -52986.8 & 23546}
 \end{align}
 The inverse can be written as
 \begin{align}
-    ({{A}^T{A}})^{-1}=\frac{1}{4826809}
-    \myvec{24389&53734 \\  53734 & 118585}\label{eq:21}
+    ({{A}^T{A}})^{-1}=
+    \myvec{0.00867 & 0.01951\\0.01951 & 0.04395}\label{eq:21}
 \end{align} 
 \begin{align}
-   {A}^T\vec{b} = \myvec{307 & 144 & --60 \\ -142& -60& 25 }\myvec{-663 \\ -312 \\ 130} \nonumber \\
-   {A}^T\vec{b} =\myvec{-256269 \\ 116116} \label{eq:22}
+   {A}^T\vec{b} =\myvec{-257098 \\ 114127} \label{eq:22}
 \end{align}
 using \ref{eq:21} and \ref{eq:22} in \ref{eq:20},the center $\vec{c}$
 \begin{align}
-    \vec{c}=\frac{1}{4826809}
-    \myvec{24389&53734 \\  53734 & 118585}\myvec{-256269 \\ 116116} \\
-    \implies \vec{c}=\frac{1}{4826809}\myvec{-10767497 \\ -742586}\\
-    \implies \vec{c}=\myvec{-2.23 \\ -0.153}  
+    \vec{c}=
+    \myvec{0.00867 & 0.01951\\0.01951 & 0.04395}\myvec{-257098 \\ 114127} \\
+    \implies \vec{c}=\myvec{-2.363 \\ -0.453}\label{eq:LS sol c}  
 \end{align}
-\clearpage
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width =\columnwidth]{parabola.png}
-	\caption{Parabola }
-	\label{fig:1}
-\end{figure}	
+Comparing \eqref{eq: svd sol c} and \eqref{eq:LS sol c}, it can be said that the solution of $\vec c$ is verified.
 \end{document}
